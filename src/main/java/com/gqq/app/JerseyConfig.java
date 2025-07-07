@@ -1,6 +1,4 @@
-package com.ebay.app;
-
-import static org.springframework.core.annotation.AnnotationFilter.packages;
+package com.gqq.app;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.stereotype.Component;
@@ -9,6 +7,6 @@ import org.springframework.stereotype.Component;
 public class JerseyConfig extends ResourceConfig {
     public JerseyConfig() {
         // Register the package containing your REST resources
-        packages("com.ebay.app.resource");
+        packages("com.gqq.app.resource");
     }
 }

@@ -1,4 +1,4 @@
-package com.ebay.app;
+package com.gqq.app;
 
 
 import org.springframework.boot.SpringApplication;

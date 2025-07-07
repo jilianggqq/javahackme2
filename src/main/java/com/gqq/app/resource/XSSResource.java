@@ -1,6 +1,7 @@
-package com.ebay.app.resource;
+package com.gqq.app.resource;
 
 import java.io.InputStream;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.Consumes;
@@ -16,15 +17,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 @Path("/v1")
 @Component
 public class XSSResource {
 
     /**
-     * Vuln Code.
-     * ReflectXSS
-     * http://localhost:8080/xss/reflect?xss=<script>alert(1)</script>
+     * Vuln Code. ReflectXSS http://localhost:8080/xss/reflect?xss=<script>alert(1)</script>
      *
      * @param xss unescape string
      */
@@ -60,9 +60,29 @@ public class XSSResource {
             InputStream is = XSSResource.class.getClassLoader().getResourceAsStream("msg.xml");
             Document document = documentBuilder.parse(is);
             NodeList chapterList = document.getElementsByTagName("webSite");
-            System.out.println("共获取到:"+chapterList.getLength());
+            System.out.println("共获取到:" + chapterList.getLength());
             return "ok";
-        }catch (Exception e) {
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return "fail";
+    }
+
+    @GET
+    @Path("/xss/readnotworking")
+    public String testDocumentBuilderInstrumentation2() {
+        try {
+            // DocumentBuilder的工厂类，专门用来生成DocumentBuilder
+            String body = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                + "<content>\n"
+                + "    <webSite>https://www.roadjava.com</webSite>\n"
+                + "</content>";
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document doc = db.parse(new InputSource(new StringReader(body)));
+            System.out.println("output" + doc.getDocumentElement().getTextContent());
+            return "ok";
+        } catch(Exception e) {
             e.printStackTrace();
         }
         return "fail";
